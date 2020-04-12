@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+    <link rel="stylesheet" type="text/css" href="/res/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/res/layui/css/layui.css">
+    <script type="text/javascript" src="/res/layui/layui.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">管理员后台</div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    用户
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/admin/person.html">修改密码</a></dd>
+                </dl>
+            </li>
+<!--            <li class="layui-nav-item"><a href="">退出</a></li>-->
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/admin/index.html">用户管理</a></dd>
+                        <dd><a href="/admin/product.html">商品管理</a></dd>
+                        <dd><a href="/admin/order.html">订单管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    商品列表
+                </div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-col-space5">
+
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" style="width: 160px" name="keyword" placeholder="请输入商品名" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="search"><i
+                                    class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                    <table id="list" lay-filter="list"></table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script id="lockBar" type="text/html">
+    <input type="checkbox" name="lock" lay-skin="switch" lay-filter="lockFilter" lay-text="上架|下架" switchId={{ d.id}} {{d.state== 1?'checked':'' }} >
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增商品</button>
+    </div>
+</script>
+
+
+<script type="text/javascript">
+    layui.config({
+        base: '/res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery', 'form','element','table'], function () {
+        var $ = layui.$,
+            form = layui.form;
+        var element = layui.element;
+        var table = layui.table;
+
+        form.on('submit(search)', function(data){
+            table.render({
+                elem: '#list'
+                ,where:data.field
+                ,toolbar: '#toolbarDemo'
+                ,page:false
+                ,url:'/admin/product/search'
+                ,cellMinWidth: 80
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    return {
+                        "code": res.status,
+                        "msg": res.msg,
+                        "count": res.data.length,
+                        "data": res.data
+                    };
+                }
+                ,response: {
+                    statusCode: 200
+                }
+                ,cols: [
+                    [
+                        {field:'id', width:80, title: 'ID', sort: true}
+                        ,{field:'name',  title: '产品名',edit:'text'}
+                        ,{field:'price', title: '价格',edit:'text'}
+                        ,{field:'pic', title: '图片',edit:'text'}
+                        ,{field:'description', title: '描述',edit:'text'}
+                        ,{field:'sort', title: '分类',edit:'text'}
+                        ,{field:'state',  title: '状态' , toolbar:'#lockBar'}
+                        ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
+                    ]
+                ]
+            });
+            return false;
+        });
+
+
+        table.render({
+            elem: '#list'
+            ,toolbar: '#toolbarDemo'
+            ,page:false
+            ,url:'/admin/product/all'
+            ,cellMinWidth: 80
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.status,
+                    "msg": res.msg,
+                    "count": res.data.length,
+                    "data": res.data
+                };
+            }
+            ,response: {
+                statusCode: 200
+            }
+            ,cols: [
+                [
+                    {field:'id', width:80, title: 'ID', sort: true}
+                    ,{field:'name',  title: '产品名',edit:'text'}
+                    ,{field:'price', title: '价格',edit:'text'}
+                    ,{field:'pic', title: '图片',edit:'text'}
+                    ,{field:'description', title: '描述',edit:'text'}
+                    ,{field:'sort', title: '分类',edit:'text'}
+                    ,{field:'state',  title: '状态' , toolbar:'#lockBar'}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
+                ]
+            ]
+        });
+
+        table.on('edit(list)', function(obj){
+
+            $.ajax({
+                url:'/admin/product/edit',
+                type:'post',
+                data:obj.data,
+                success:function (ret) {
+                    if(ret.status == 200){
+                        layer.msg(ret.msg);
+                    }else{
+                        location.href = '/admin/product.html'
+                    }
+                }
+            });
+        });
+
+        form.on('switch(lockFilter)', function (obj) {
+            var switchId = obj.elem.getAttribute("switchId");
+            var state = obj.elem.checked === true ? 1 : 0;
+            $.ajax({
+                url: "/admin/product/edit",
+                type: "POST",
+                data: {id: switchId, state: state},
+                success: function (ret) {
+                    if(ret.status == 200){
+                        layer.msg(ret.msg);
+                    }else{
+                        location.href = '/admin/product.html';
+                    }
+                }
+            });
+
+        });
+
+
+        table.on('toolbar(list)', function(obj){
+            if(obj.event === 'add'){
+                layer.open({
+                    type: 1 //Page层类型
+                    , btn: ["确定", "取消"]
+                    , title: '请填写'
+                    , skin: 'layui-layer-prompt'
+                    , content: "<div class=''>" +
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='name' placeholder='商品名'>" +
+                        "<br/>" +
+                        "<input type='number' class='layui-layer-input' autocomplete='off' name='price' placeholder='价格'>" +
+                        "<br/>"+
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='pic' placeholder='图片地址'>" +
+                        "<br/>" +
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='description' placeholder='描述'>" +
+                        "<br/>" +
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='sort' placeholder='分类'>" +
+                        "<br/>" +
+                        "</div>"
+                    , yes: function (index, layero) {
+
+                        var name = $(layero).find("input[name='name']").val();
+                        var price = $(layero).find("input[name='price']").val();
+                        var pic = $(layero).find("input[name='pic']").val();
+                        var description = $(layero).find("input[name='description']").val();
+                        var sort = $(layero).find("input[name='sort']").val();
+
+                        $.ajax({
+                            url:'/admin/product/add',
+                            type:'post',
+                            data:{
+                                'name':name,
+                                'price':price,
+                                'pic':pic,
+                                'description':description,
+                                'sort':sort
+                            },
+                            success:function (ret) {
+                                if(ret.status==200){
+                                    location.href = '/admin/product.html';
+                                }else{
+                                    layer.msg(ret.msg);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
+        table.on('tool(list)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm("真的删除 "+data.name+" 商品吗？", function(index){
+
+                    $.ajax({
+                        url:'/admin/product/del',
+                        type:'post',
+                        data:data,
+                        success:function (ret) {
+                            layer.msg(ret.msg);
+                            if(ret.status==200){
+                                obj.del();
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+    })
+</script>
+</body>
+</html>

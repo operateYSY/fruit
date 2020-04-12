@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="/res/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/res/layui/css/layui.css">
+    <script type="text/javascript" src="/res/layui/layui.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body>
+
+<div id="header"></div>
+
+
+<div class="content content-nav-base  login-content">
+    <div class="main-nav">
+        <div class="inner-cont0">
+            <div class="inner-cont1 w1200">
+                <div class="inner-cont2">
+                    <a href="/index.html" class="active">所有商品</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login-bg">
+        <div class="login-cont w1200">
+            <div class="form-box">
+                                    <form class="layui-form" action="">
+                    <legend>用户登录</legend>
+                    <div class="layui-form-item">
+                        <div class="layui-inline iphone">
+                            <div class="layui-input-inline">
+                                <i class="layui-icon layui-icon-username iphone-icon"></i>
+                                <input type="text" name="username" id="username" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline veri-code">
+                            <div class="layui-input-inline">
+                                <input id="password" type="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item login-btn">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="login">登录</button>
+                        </div>
+                    </div>
+                                   </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="footer"></div>
+
+<script type="text/javascript">
+    layui.config({
+        base: '/res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery','form'],function(){
+        var $ = layui.$,
+            form = layui.form;
+
+        $("#header").load("/header.html");
+        $("#footer").load("/footer.html");
+
+        form.on('submit(login)', function(data){
+            $.ajax({
+               url:'/user/login',
+               type:'post',
+               data:data.field,
+               success:function (ret) {
+                   layer.msg(ret.msg);
+                   if(ret.status==200){
+                       //登录成功
+                       sessionStorage.setItem("userId",ret.data.id);
+                       sessionStorage.setItem("username",ret.data.username);
+                       if(ret.data.address==null || ret.data.address=="" || ret.data.telephone==null || ret.data.address==""){
+                           layer.alert('您未完善个人信息，请您完善~',function(index){
+                               location.href='/me.html';
+                               layer.close(index);
+                           } );
+                       }else{
+                           location.href='/index.html'
+                       }
+
+
+
+
+                   }else{
+
+                   }
+               } 
+            });
+            return false;
+        });
+
+    })
+</script>
+
+</body>
+</html>

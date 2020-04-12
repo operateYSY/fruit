@@ -1,0 +1,56 @@
+<div class="site-nav-bg">
+    <div class="site-nav w1200">
+        <p class="sn-back-home">
+            <i class="layui-icon layui-icon-home"></i>
+            <a href="#">首页</a>
+        </p>
+        <div class="sn-quick-menu">
+            <div class="login" id="login"><a href="/login.html">登录</a></div>
+            <div class="login" id="register"><a href="/register.html">注册</a></div>
+            <div class="login" id="center"><a href="/order.html">个人中心</a></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="header">
+    <div class="headerLayout w1200">
+        <div class="headerCon">
+            <h1 class="mallLogo">
+                <a href="#" title="每日生鲜">
+                    <img src="/res/static/img/logo.png">
+                </a>
+            </h1>
+            <div class="mallSearch">
+                <form action="/index.html" method="get" class="layui-form" novalidate>
+                    <input type="text" name="keyword" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
+                    <button class="layui-btn" lay-submit lay-filter="search">
+                        <i class="layui-icon layui-icon-search"></i>
+                    </button>
+                    <input type="hidden" name="" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    layui.config({
+        base: '/res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery','form'],function(){
+        var $ = layui.$,
+            form = layui.form;
+        var userId = sessionStorage.userId;
+        if(userId != undefined && userId != null){
+            $('#login').attr("style","display:none");
+            $('#register').attr("style","display:none");
+            $('#center').attr("style","display:block");
+        }else{
+            $('#login').attr("style","display:block");
+            $('#register').attr("style","display:block");
+            $('#center').attr("style","display:none");
+        }
+
+    })
+</script>

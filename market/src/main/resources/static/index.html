@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>在线超市</title>
+    <link rel="stylesheet" type="text/css" href="/res/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/res/layui/css/layui.css">
+    <script type="text/javascript" src="/res/layui/layui.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body>
+
+<div id="header"></div>
+
+
+<div class="content content-nav-base commodity-content">
+    <div class="main-nav">
+        <div class="inner-cont0">
+            <div class="inner-cont1 w1200">
+                <div class="inner-cont2">
+                    <a href="/index.html" class="active">所有商品</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="commod-cont-wrap">
+        <div class="commod-cont w1200 layui-clear">
+            <div class="left-nav">
+                <div class="title">所有分类</div>
+                <div class="list-box" id="sort">
+                    <dd><a href="/index.html">全部类别</a></dd>
+                </div>
+            </div>
+            <div class="right-cont-wrap">
+                <div class="right-cont">
+<!--                    <div class="sort layui-clear">-->
+<!--                        <a class="active" href="javascript:;" event = 'volume'>销量</a>-->
+<!--                        <a href="javascript:;" event = 'price'>价格</a>-->
+<!--                        <a href="javascript:;" event = 'newprod'>新品</a>-->
+<!--                        <a href="javascript:;" event = 'collection'>收藏</a>-->
+<!--                    </div>-->
+                    <div class="prod-number">
+                        <span id="res"></span>
+                    </div>
+                    <div class="cont-list layui-clear" id="list-cont">
+
+                    </div>
+                    <!-- 模版引擎导入 -->
+                    <script type="text/html" id="productListTpl">
+                      {{# layui.each(d,function(index,item){}}
+                        <div class="item">
+                          <div class="img">
+                            <a href="/product.html?p={{item.id}}">
+                                <img src="{{item.pic}}" alt="加载失败" onerror="this.src='/res/static/img/error.jpg';this.onerror='';"/>
+                            </a>
+                          </div>
+                          <div class="text">
+                            <p class="title">{{item.name}}</p>
+                            <p class="price">
+                              <span class="pri">{{item.price}} 元</span>
+                              <span class="nub">{{item.description}}</span>
+                            </p>
+                          </div>
+                        </div>
+                      {{# }); }}
+                    </script>
+
+                    <script type="text/html" id="sortListTpl">
+                        {{# layui.each(d,function(index,item){}}
+                        <dd><a href="?sort={{item}}">{{item}}</a></dd>
+                        {{# }); }}
+                    </script>
+
+
+
+                    <div id="demo0" style="text-align: center;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="footer"></div>
+
+<script>
+
+    layui.config({
+        base: '/res/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['mm','laypage','jquery'],function(){
+        var laypage = layui.laypage,$ = layui.$,
+            mm = layui.mm;
+        var laytpl = layui.laytpl;
+        // laypage.render({
+        //     elem: 'demo0'
+        //     ,count: 100 //数据总数
+        // });
+        $("#header").load("/header.html");
+        $("#footer").load("/footer.html");
+
+        function getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);//获取url中"?"符后的字串，截取？后的字符串
+            var vars = query.split("&");//字符串按照&拆分
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");//获取每一个参数
+                if(pair[0] == variable){return pair[1];}//获取参数值
+            }
+            return("");
+        }
+        var keyword = decodeURIComponent(getQueryVariable("keyword"));
+        var sort = decodeURIComponent(getQueryVariable("sort"));
+        $.get('/product/search',{'keyword':keyword,'sort':sort},function (res) {
+            $('#res').html("搜索到"+res.data.length+"项");
+            laytpl(productListTpl.innerHTML).render(res.data, function (html) {
+                $('#list-cont').html(html);
+            });
+        }, 'json');
+
+        $.get('/product/sort',function (res) {
+            laytpl(sortListTpl.innerHTML).render(res.data, function (html) {
+
+                $('#sort').append(html);
+            });
+        }, 'json');
+
+
+
+
+
+        $('.sort a').on('click',function(){
+            $(this).addClass('active').siblings().removeClass('active');
+        })
+        $('.list-box dt').on('click',function(){
+            if($(this).attr('off')){
+                $(this).removeClass('active').siblings('dd').show()
+                $(this).attr('off','')
+            }else{
+                $(this).addClass('active').siblings('dd').hide()
+                $(this).attr('off',true)
+            }
+        })
+
+
+
+
+
+    });
+</script>
+
+
+</body>
+</html>

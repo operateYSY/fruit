@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员登录</title>
+    <link rel="stylesheet" type="text/css" href="/res/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/res/layui/css/layui.css">
+    <script type="text/javascript" src="/res/layui/layui.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body>
+
+<!--<form class="layui-form">-->
+<!--    <div class=''>-->
+<!--        <input type='text' class='layui-layer-input' autocomplete='off' name='username' placeholder='请输入帐号'>-->
+<!--        <hr/>-->
+<!--        <input type='password' class='layui-layer-input' autocomplete='off' name='password' placeholder='请输入密码'>-->
+<!--        <hr/>-->
+<!--        <button lay-submit="">登录</button>-->
+<!--    </div>-->
+<!--</form>-->
+
+<script type="text/javascript">
+    layui.config({
+        base: '/res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery', 'form'], function () {
+        var $ = layui.$,
+            form = layui.form;
+        layer.open({
+            type: 1 //Page层类型
+            , btn: ["确定", "取消"]
+            , title: '请登录'
+            , skin: 'layui-layer-prompt'
+            , content: "<div class=''>" +
+                "<input type='text' class='layui-layer-input' autocomplete='off' name='username' placeholder='帐号'>" +
+                "<hr/>" +
+                "<input type='password' class='layui-layer-input' autocomplete='off' name='password' placeholder='密码'>" +
+                "</div>"
+            , yes: function (index, layero) {
+                //按钮【按钮一】的回调
+                var username = $(layero).find("input[name='username']").val();
+                var password = $(layero).find("input[name='password']").val();
+                console.log(username);
+                console.log(password);
+                $.ajax({
+                    url:'/admin/login',
+                    type:'post',
+                    data:{
+                       'username':username,
+                       'password':password
+                   },
+                    success:function (ret) {
+                        if(ret.status==200){
+                            sessionStorage.setItem("adminId",ret.data.id);
+                            location.href = '/admin/index.html';
+                        }else{
+                            layer.msg(ret.msg);
+                        }
+                    }
+                });
+            }
+        });
+
+
+    })
+</script>
+</body>
+
+
+</html>

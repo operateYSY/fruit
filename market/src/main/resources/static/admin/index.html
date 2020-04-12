@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+    <link rel="stylesheet" type="text/css" href="/res/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/res/layui/css/layui.css">
+    <script type="text/javascript" src="/res/layui/layui.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">管理员后台</div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    用户
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/admin/person.html">修改密码</a></dd>
+                </dl>
+            </li>
+<!--            <li class="layui-nav-item"><a href="">退出</a></li>-->
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/admin/index.html">用户管理</a></dd>
+                        <dd><a href="/admin/product.html">商品管理</a></dd>
+                        <dd><a href="/admin/order.html">订单管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <div class="layui-card">
+
+
+                <div class="layui-card-header">
+                    用户列表
+                </div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-col-space5">
+
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" style="width: 160px" name="username" placeholder="请输入用户名" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="search"><i
+                                    class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                    <table id="userList" lay-filter="list"></table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增用户</button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/javascript">
+    layui.config({
+        base: '/res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery', 'form','element','table'], function () {
+        var $ = layui.$,
+            form = layui.form;
+        var element = layui.element;
+        var table = layui.table;
+
+        form.on('submit(search)', function(data){
+            table.render({
+                elem: '#userList'
+                ,page:false
+                ,toolbar: '#toolbarDemo'
+                ,url:'/admin/userList/search'
+                ,where:data.field
+                ,cellMinWidth: 80
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    return {
+                        "code": res.status,
+                        "msg": res.msg,
+                        "count": res.data.length,
+                        "data": res.data
+                    };
+                }
+                ,response: {
+                    statusCode: 200
+                }
+                ,cols: [
+                    [
+                        {field:'id', width:80, title: 'ID', sort: true}
+                        ,{field:'username',  title: '用户名'}
+                        ,{field:'address', title: '地址'}
+                        ,{field:'telephone',  title: '电话'}
+                        ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
+                    ]
+                ]
+            });
+            return false;
+        });
+
+
+        table.render({
+            elem: '#userList'
+            ,page:false
+            ,toolbar: '#toolbarDemo'
+            ,url:'/admin/userList'
+            ,cellMinWidth: 80
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.status,
+                    "msg": res.msg,
+                    "count": res.data.length,
+                    "data": res.data
+                };
+            }
+            ,response: {
+                statusCode: 200
+            }
+            ,cols: [
+                [
+                {field:'id', width:80, title: 'ID', sort: true}
+                ,{field:'username',  title: '用户名'}
+                ,{field:'address', title: '地址'}
+                ,{field:'telephone',  title: '电话'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
+            ]
+            ]
+        });
+
+        table.on('toolbar(list)', function(obj){
+            if(obj.event === 'add'){
+                layer.open({
+                    type: 1 //Page层类型
+                    , btn: ["确定", "取消"]
+                    , title: '请填写'
+                    , skin: 'layui-layer-prompt'
+                    , content: "<div class=''>" +
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='username' placeholder='帐号'>" +
+                        "<br/>" +
+                        "<input type='password' class='layui-layer-input' autocomplete='off' name='password' placeholder='密码'>" +
+                        "<br/>"+
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='address' placeholder='地址'>" +
+                        "<br/>" +
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='telephone' placeholder='电话'>" +
+                        "</div>"
+                    , yes: function (index, layero) {
+
+                        var username = $(layero).find("input[name='username']").val();
+                        var password = $(layero).find("input[name='password']").val();
+                        var address = $(layero).find("input[name='address']").val();
+                        var telephone = $(layero).find("input[name='telephone']").val();
+
+                        $.ajax({
+                            url:'/admin/user/add',
+                            type:'post',
+                            data:{
+                                'username':username,
+                                'password':password,
+                                'address':address,
+                                'telephone':telephone
+                            },
+                            success:function (ret) {
+                                if(ret.status==200){
+                                    location.href = '/admin/index.html';
+                                }else{
+                                    layer.msg(ret.msg);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        table.on('tool(list)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm("真的删除 "+data.username+" 用户吗？", function(index){
+
+                    $.ajax({
+                        url:'/admin/user/del',
+                        type:'post',
+                        data:data,
+                        success:function (ret) {
+                            layer.msg(ret.msg);
+                            if(ret.status==200){
+                                obj.del();
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+
+    })
+</script>
+</body>
+</html>
