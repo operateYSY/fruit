@@ -35,7 +35,7 @@
                     <dl class="layui-nav-child">
                         <dd><a href="/admin/index.html">用户管理</a></dd>
                         <dd><a href="/admin/product.html">商品管理</a></dd>
-                        <dd><a href="/admin/order.html">订单管理</a></dd>
+
                     </dl>
                 </li>
             </ul>
@@ -69,9 +69,7 @@
     </div>
 
 </div>
-<script id="lockBar" type="text/html">
-    <input type="checkbox" name="lock" lay-skin="switch" lay-filter="lockFilter" lay-text="上架|下架" switchId={{ d.id}} {{d.state== 1?'checked':'' }} >
-</script>
+
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
@@ -118,7 +116,7 @@
                         ,{field:'pic', title: '图片',edit:'text'}
                         ,{field:'description', title: '描述',edit:'text'}
                         ,{field:'sort', title: '分类',edit:'text'}
-                        ,{field:'state',  title: '状态' , toolbar:'#lockBar'}
+                        ,{field:'state',  title: '状态' , edit:'text'}
                         ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
                     ]
                 ]
@@ -152,7 +150,7 @@
                     ,{field:'pic', title: '图片',edit:'text'}
                     ,{field:'description', title: '描述',edit:'text'}
                     ,{field:'sort', title: '分类',edit:'text'}
-                    ,{field:'state',  title: '状态' , toolbar:'#lockBar'}
+                    ,{field:'state',  title: '状态' , edit:'text'}
                     ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
                 ]
             ]

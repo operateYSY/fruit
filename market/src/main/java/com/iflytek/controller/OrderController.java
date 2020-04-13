@@ -2,7 +2,7 @@ package com.iflytek.controller;
 
 import com.iflytek.enity.Order;
 import com.iflytek.service.OrderService;
-import com.iflytek.utils.Result;
+import com.iflytek.config.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;

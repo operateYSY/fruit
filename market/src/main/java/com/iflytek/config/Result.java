@@ -1,6 +1,5 @@
-package com.iflytek.utils;
+package com.iflytek.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
 import java.io.Serializable;

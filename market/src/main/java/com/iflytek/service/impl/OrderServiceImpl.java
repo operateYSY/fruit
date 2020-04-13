@@ -9,7 +9,7 @@ import com.iflytek.enity.Orderv;
 import com.iflytek.enity.Product;
 import com.iflytek.enity.User;
 import com.iflytek.service.OrderService;
-import com.iflytek.utils.Result;
+import com.iflytek.config.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

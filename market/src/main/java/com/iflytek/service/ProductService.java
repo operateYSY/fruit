@@ -2,7 +2,7 @@ package com.iflytek.service;
 
 
 import com.iflytek.enity.Product;
-import com.iflytek.utils.Result;
+import com.iflytek.config.Result;
 
 public interface ProductService {
 

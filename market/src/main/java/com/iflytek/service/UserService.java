@@ -1,7 +1,7 @@
 package com.iflytek.service;
 
 import com.iflytek.enity.User;
-import com.iflytek.utils.Result;
+import com.iflytek.config.Result;
 
 public interface UserService {
     Result login(User user);

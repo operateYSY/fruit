@@ -11,7 +11,6 @@ public class Product {
     private String name;
     private Double price;
 
-    @TableField(fill = FieldFill.INSERT)
     private String pic;
     private String description;
     private String sort;

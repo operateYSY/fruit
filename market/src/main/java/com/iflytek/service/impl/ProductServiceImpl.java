@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.iflytek.dao.ProductDao;
 import com.iflytek.enity.Product;
 import com.iflytek.service.ProductService;
-import com.iflytek.utils.Result;
+import com.iflytek.config.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

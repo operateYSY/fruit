@@ -12,7 +12,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         setFieldValByName("time", new Date(), metaObject);
         setFieldValByName("state", 1, metaObject);
-        setFieldValByName("pic", "/res/static/img/error.jpg", metaObject);
+
     }
 
     @Override

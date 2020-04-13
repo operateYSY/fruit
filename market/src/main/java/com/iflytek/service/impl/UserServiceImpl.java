@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.iflytek.dao.UserDao;
 import com.iflytek.enity.User;
 import com.iflytek.service.UserService;
-import com.iflytek.utils.Result;
+import com.iflytek.config.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;

@@ -5,7 +5,7 @@ import com.iflytek.enity.Admin;
 import com.iflytek.enity.Order;
 import com.iflytek.enity.Product;
 import com.iflytek.enity.User;
-import com.iflytek.utils.Result;
+import com.iflytek.config.Result;
 
 public interface AdminService {
     Result login(Admin admin);
