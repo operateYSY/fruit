@@ -82,7 +82,7 @@
 </div>
 
 
-<div id="footer"></div>
+
 
 <script>
 
@@ -109,8 +109,11 @@
             }
             return("");
         }
+
+
         var keyword = decodeURIComponent(getQueryVariable("keyword"));
         var sort = decodeURIComponent(getQueryVariable("sort"));
+
         $.get('/product/search',{'keyword':keyword,'sort':sort},function (res) {
             $('#res').html("搜索到"+res.data.length+"项");
             laytpl(productListTpl.innerHTML).render(res.data, function (html) {
@@ -124,8 +127,6 @@
                 $('#sort').append(html);
             });
         }, 'json');
-
-
 
 
 

@@ -16,7 +16,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter{
                         "/admin/**",
                         "/res/**",
                         "/header.html",
-                        "/footer.html",
+
                         "/index.html",
                         "/login.html",
                         "/register.html",
