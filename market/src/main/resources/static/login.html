@@ -76,14 +76,9 @@
                        //登录成功
                        sessionStorage.setItem("userId",ret.data.id);
                        sessionStorage.setItem("username",ret.data.username);
-                       if(ret.data.address==null || ret.data.address=="" || ret.data.telephone==null || ret.data.address==""){
-                           layer.alert('您未完善个人信息，请您完善~',function(index){
-                               location.href='/me.html';
-                               layer.close(index);
-                           } );
-                       }else{
+
                            location.href='/index.html'
-                       }
+
 
 
 
