@@ -27,7 +27,7 @@
             <div class="left-nav">
                 <div class="title">个人中心</div>
                 <div class="list-box" id="sort">
-
+                    <dd><a href="/order.html">我的订单</a></dd>
                     <dd><a href="/person.html">维护个人信息</a></dd>
                 </div>
             </div>
@@ -35,6 +35,36 @@
                 <div class="right-cont">
                     <div class="cont-list layui-clear" id="list-cont">
 
+                        <div class="layui-card">
+                            <div class="layui-card-header">修改基本信息</div>
+                            <div class="layui-card-body">
+                                <form class="layui-form">
+
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">地址</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="address" name="address" lay-verify="required" autocomplete="off" placeholder="请输入地址" class="layui-input">
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">电话</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="telephone" name="telephone" lay-verify="required||phone" autocomplete="off" placeholder="请输入电话" class="layui-input">
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button class="layui-btn" lay-submit="" lay-filter="profile">
+                                                <i class="layui-icon layui-icon-set"></i>修改
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
 
                         <div class="layui-card">
                             <div class="layui-card-header">修改密码</div>
@@ -77,15 +107,40 @@
 
     layui.config({
         base: '/res/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
-    }).use(['mm','laypage','jquery','form'],function(){
-        var laypage = layui.laypage,$ = layui.$,
-            mm = layui.mm;
+    }).use(['laypage','jquery','form'],function(){
+        var laypage = layui.laypage,$ = layui.$;
+
         var laytpl = layui.laytpl;
         var form = layui.form;
 
         $("#header").load("/header.html");
 
+        $.ajax({
+            url:'/user/getProfile',
+            type:'post',
+            data:{
+                'id':sessionStorage.userId
+            },
+            success:function (ret) {
+                var data = ret.data;
+                $('#address').val(data.address);
+                $('#telephone').val(data.telephone);
+            }
+        });
 
+        form.on('submit(profile)', function(data){
+            data.field.id = sessionStorage.userId;
+            $.ajax({
+                url:'/user/editProfile',
+                type:'post',
+                data:data.field,
+                success:function (ret) {
+                    layer.msg(ret.msg);
+
+                }
+            });
+            return false;
+        });
 
 
         form.on('submit(setPwd)', function(data){

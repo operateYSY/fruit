@@ -36,7 +36,7 @@
                     <dl class="layui-nav-child">
                         <dd><a href="/admin/index.html">用户管理</a></dd>
                         <dd><a href="/admin/product.html">商品管理</a></dd>
-
+                        <dd><a href="/admin/order.html">订单管理</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -87,9 +87,9 @@
 
     layui.config({
         base: '/res/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
-    }).use(['mm','laypage','jquery','form'],function(){
-        var laypage = layui.laypage,$ = layui.$,
-            mm = layui.mm;
+    }).use(['laypage','jquery','form'],function(){
+        var laypage = layui.laypage,$ = layui.$;
+
         var laytpl = layui.laytpl;
         var form = layui.form;
 

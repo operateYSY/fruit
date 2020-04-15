@@ -1,7 +1,11 @@
 
 
 layui.define(['jquery','element','laytpl','carousel','laypage'],function(exports){
-	var $ = layui.$,laytpl = layui.laytpl,element = layui.element,laypage = layui.laypage,carousel = layui.carousel;
+	var $ = layui.$,
+		laytpl = layui.laytpl,
+		element = layui.element,
+		laypage = layui.laypage,
+		carousel = layui.carousel;
 	var _mm = {
 		request : function(param){
 			var _this = this;

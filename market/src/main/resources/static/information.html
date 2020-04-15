@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../res/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="../res/static/css/info.css">
+  <link rel="stylesheet" type="text/css" href="../res/layui/css/layui.css">
+  <script type="text/javascript" src="../res/layui/layui.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body>
+
+<div id="header"></div>
+
+
+  <div class="content content-nav-base information-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="index.html" class="active">所有商品</a>
+            <a href="information.html" class="active">商店资讯</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="layui-nav layui-bg-green " id="sort">
+
+
+    </ul>
+
+    <script type="text/html" id="sortListTpl">
+      {{# layui.each(d,function(index,item){}}
+      <li class="layui-nav-item layui-this"><a href="?sort={{item}}">{{item}}</a></li>
+      {{# }); }}
+</script>
+
+
+
+    <div class="info-list-box">
+      <div class="info-list w1200">
+        <div class="item-box layui-clear" id="list-cont">
+
+        </div>
+
+          <script type="text/html" id="infoListTpl">
+          {{# layui.each(d,function(index,item){}}
+          {{#  if(item.sort =="公告"){ }}
+          <div class="item" style="background-color: #00F7DE" >
+
+            <div class="img">
+              <img src="../res/static/img/error.jpg" alt="">
+            </div>
+            <div class="text">
+              <h4>{{item.title}}</h4>
+              <p class="data">{{item.time}}</p>
+              <p class="info-cont">{{item.text}}</p>
+            </div>
+          </div>
+          {{# }else{ }}
+          <div class="item" >
+
+            <div class="img">
+              <img src="../res/static/img/error.jpg" alt="">
+            </div>
+            <div class="text">
+              <h4>{{item.title}}</h4>
+              <p class="data">{{item.time}}</p>
+              <p class="info-cont">{{item.text}}</p>
+            </div>
+          </div>
+          {{# } }}
+
+          {{# }); }}
+          </script>
+          <tbody>
+
+          </tbody>
+
+
+        <div id="demo0" style="text-align: center;"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  layui.config({
+    base: '../res/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','jquery','element','laytpl','carousel','laypage'],function(){
+    var $ = layui.$,
+            laytpl = layui.laytpl,
+            element = layui.element,
+            laypage = layui.laypage,
+            carousel = layui.carousel;
+    mm = layui.mm;
+
+
+    $("#header").load("/header.html");
+
+
+
+
+
+
+   // $.get('/info/all',function (res) {
+
+    //  laytpl(infoListTpl.innerHTML).render(res.data, function (html) {
+    //    $('#list-cont').html(html);
+    //  });
+
+
+    function showRecord(pageNo,pageSize){
+      $('#list-cont').empty();
+      $.get("/info/all",
+              {
+                index:pageNo,
+                num:pageSize
+              },
+              function (res) {
+                //加载后台返回的List集合数据
+                laytpl(infoListTpl.innerHTML).render(res.data, function (html) {
+
+                  $('#list-cont').append(html);
+                });
+              },
+              "json"
+      );
+
+    }
+    $.get('/info/sort',function (res) {
+      laytpl(sortListTpl.innerHTML).render(res.data, function (html) {
+
+        $('#sort').append(html);
+      });
+    }, 'json');
+
+      laypage.render({
+        elem: 'demo0'
+        ,count: 100, //数据总数
+        limit:10
+        , prev: '上一页'                 //上一页文本
+        , next: '下一页'                 //下一页文本
+        , first: 1                      //首页文本
+        , last: 100                     //尾页文本
+        , layout: ['prev', 'page', 'next','limit','refresh','skip']
+        , jump: function (obj, first) { //obj为当前页的属性和方法，第一次加载first为true
+          //非首次加载 do something
+          //if (!first) {
+            //清空以前加载的数据
+
+            //调用加载函数加载数据
+            showRecord(obj.curr, obj.limit);
+         // }
+        }
+
+      });
+
+
+
+
+
+    // 模版引擎导入
+     // var html = demo.innerHTML;
+     // var listCont = document.getElementById('list-cont');
+     //  mm.request({
+     //    url: '../json/information.json',
+     //    success : function(res){
+     //      console.log(res)
+     //      listCont.innerHTML = mm.renderHtml(html,res)
+     //    },
+     //    error: function(res){
+     //      console.log(res);
+     //    }
+     //  })   
+});
+
+</script>
+
+
+</body>
+</html>

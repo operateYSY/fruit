@@ -1,7 +1,7 @@
 
-
 body{font-family: "Microsoft YaHei", "SimSun", '\5b8b\4f53', sans-serif;
 }
+
 .w1200{width: 1200px; margin:0 auto;}
 .w900{width: 1000px; margin:0 auto;}
 .nobor{border-bottom: 0!important;}
@@ -212,6 +212,7 @@ i{font-style: normal;}
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
  }
+
 /*end-information*/
 
 

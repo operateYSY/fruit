@@ -16,15 +16,19 @@ public class WebAppConfig extends WebMvcConfigurerAdapter{
                         "/admin/**",
                         "/res/**",
                         "/header.html",
-
                         "/index.html",
                         "/login.html",
                         "/register.html",
+                        "/information.html",
                         "/product/all",
                         "/product/sort",
                         "/product/search",
                         "/user/login",
-                        "/user/register");
+                        "/user/register",
+                        "/info/all",
+                        "/info/sort",
+                        "/info/search"
+                );
             // excludePathPatterns("/login", "/register") 表示除了登陆与注册之外，因为登陆注册不需要登陆也可以访问
         registry.addInterceptor(new AdminInterceptor())
                 .addPathPatterns("/admin/**")

@@ -47,7 +47,7 @@
 
         <input type="hidden" name="productId" value="{{d.id}}">
         <div class="preview-wrap">
-            <a href="javascript:;"><img style="width: 392px;height: 392px;" src="{{d.pic}}"></a>
+            <a href="javascript:;"><img src="{{d.pic}}"></a>
         </div>
         <div class="itemInfo-wrap">
             <div class="itemInfo">
@@ -91,14 +91,17 @@
 
     layui.config({
         base: '/res/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
-    }).use(['mm', 'laypage', 'jquery', 'form'], function () {
-        var laypage = layui.laypage, $ = layui.$,
-            mm = layui.mm;
+    }).use(['jquery','element','laytpl','carousel', 'laypage',  'form'], function () {
+
+        var     $ = layui.$,
+            element = layui.element,
+            laypage = layui.laypage,
+            carousel = layui.carousel;
         var laytpl = layui.laytpl;
         var form = layui.form;
 
         $("#header").load("/header.html");
-        $("#footer").load("/footer.html");
+
 
         function getQueryVariable(variable) {
             var query = window.location.search.substring(1);
@@ -135,7 +138,7 @@
                     data:data.field,
                     success:function (ret) {
                         layer.confirm('下单成功，是否去看看？', function(index){
-                            location.href = "/list_bought.html";
+                            location.href = "/order.html";
                             layer.close(index);
                         });
 

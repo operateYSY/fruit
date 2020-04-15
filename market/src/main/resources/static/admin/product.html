@@ -35,7 +35,7 @@
                     <dl class="layui-nav-child">
                         <dd><a href="/admin/index.html">用户管理</a></dd>
                         <dd><a href="/admin/product.html">商品管理</a></dd>
-
+                        <dd><a href="/admin/order.html">订单管理</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -132,15 +132,15 @@
             ,url:'/admin/product/all'
             ,cellMinWidth: 80
             ,parseData: function(res){ //res 即为原始返回的数据
-                return {
-                    "code": res.status,
-                    "msg": res.msg,
-                    "count": res.data.length,
-                    "data": res.data
+                return {                      //数据格式解析的回调函数，用于将返回的任意数据格式解析成 table 组件规定的数据格式。
+                    "code": res.status,  //解析接口状态
+                    "msg": res.msg,     //解析提示文本
+                    "count": res.data.length, //解析数据长度
+                    "data": res.data   //解析数据列表
                 };
             }
-            ,response: {
-                statusCode: 200
+            ,response: {  // response 参数来重新设定返回的数据格式
+                statusCode: 200//规定成功的状态码，默认：0
             }
             ,cols: [
                 [
@@ -210,7 +210,7 @@
                         "<input type='text' class='layui-layer-input' autocomplete='off' name='sort' placeholder='分类'>" +
                         "<br/>" +
                         "</div>"
-                    , yes: function (index, layero) {
+                    , yes: function (index, layero) {//yes - 确定按钮回调方法
 
                         var name = $(layero).find("input[name='name']").val();
                         var price = $(layero).find("input[name='price']").val();

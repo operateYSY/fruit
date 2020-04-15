@@ -36,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
            or.setProductName(pr.getName());
            or.setProductPic(pr.getPic());
            or.setProductSort(pr.getSort());
+           or.setProductPrice(pr.getPrice());
        }}
 
     return Result.build(200,"查询成功",list);

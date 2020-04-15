@@ -35,7 +35,7 @@
                     <dl class="layui-nav-child">
                         <dd><a href="/admin/index.html">用户管理</a></dd>
                         <dd><a href="/admin/product.html">商品管理</a></dd>
-
+                        <dd><a href="/admin/order.html">订单管理</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -99,15 +99,15 @@
                 ,where:data.field
                 ,cellMinWidth: 80
                 ,parseData: function(res){ //res 即为原始返回的数据
-                    return {
-                        "code": res.status,
+                    return {             //数据格式解析的回调函数，用于将返回的任意数据格式解析成 table 组件规定的数据格式。
+                        "code": res.status,   //解析接口状态
                         "msg": res.msg,
                         "count": res.data.length,
                         "data": res.data
                     };
                 }
-                ,response: {
-                    statusCode: 200
+                ,response: {  // response 参数来重新设定返回的数据格式
+                    statusCode: 200  //规定成功的状态码，默认：0
                 }
                 ,cols: [
                     [
