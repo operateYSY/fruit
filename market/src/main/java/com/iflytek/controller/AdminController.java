@@ -1,9 +1,6 @@
 package com.iflytek.controller;
 
-import com.iflytek.enity.Admin;
-import com.iflytek.enity.Order;
-import com.iflytek.enity.Product;
-import com.iflytek.enity.User;
+import com.iflytek.enity.*;
 import com.iflytek.service.AdminService;
 import com.iflytek.config.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,4 +104,33 @@ public class AdminController {
         return adminService.orderSearch(id,address);
     }
 
+    @GetMapping("/info/all")
+    @ResponseBody
+    public Result infoAll(){
+        return adminService.infoAll();
+    }
+
+    @GetMapping("/info/search")
+    @ResponseBody
+    public Result infoSearch(String keyword){
+        return adminService.infoSearch(keyword);
+    }
+
+    @PostMapping("/info/edit")
+    @ResponseBody
+    public Result infoEdit(Information i){
+        return adminService.infoEdit(i);
+    }
+
+    @PostMapping("/info/add")
+    @ResponseBody
+    public Result infoAdd(Information i){
+        return adminService.infoAdd(i);
+    }
+
+    @PostMapping("/info/del")
+    @ResponseBody
+    public Result infoDel(Information i){
+        return adminService.infoDel(i);
+    }
 }

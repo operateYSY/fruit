@@ -1,10 +1,7 @@
 package com.iflytek.service;
 
 
-import com.iflytek.enity.Admin;
-import com.iflytek.enity.Order;
-import com.iflytek.enity.Product;
-import com.iflytek.enity.User;
+import com.iflytek.enity.*;
 import com.iflytek.config.Result;
 
 public interface AdminService {
@@ -15,6 +12,8 @@ public interface AdminService {
     Result getUserList();
 
     Result getOrderList();
+
+
 
     Result delUser(User u);
 
@@ -28,6 +27,8 @@ public interface AdminService {
 
     Result productDel(Product p);
 
+
+
     Result productAll();
 
     Result productSearch(String keyword);
@@ -35,4 +36,10 @@ public interface AdminService {
     Result orderEdit(Order o);
 
     Result orderSearch(String id,String address);
+
+    Result infoAll();
+    Result infoEdit(Information f);
+    Result infoAdd(Information f);
+    Result infoDel(Information f);
+    Result infoSearch(String keyword);
 }

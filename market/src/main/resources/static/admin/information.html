@@ -23,7 +23,7 @@
                     <dd><a href="/admin/person.html">修改密码</a></dd>
                 </dl>
             </li>
-<!--            <li class="layui-nav-item"><a href="">退出</a></li>-->
+            <!--            <li class="layui-nav-item"><a href="">退出</a></li>-->
         </ul>
     </div>
 
@@ -46,16 +46,14 @@
     <div class="layui-body">
         <div style="padding: 15px;">
             <div class="layui-card">
-
-
                 <div class="layui-card-header">
-                    用户列表
+                    商品列表
                 </div>
                 <div class="layui-card-body">
                     <form class="layui-form layui-col-space5">
 
                         <div class="layui-inline layui-show-xs-block">
-                            <input type="text" style="width: 160px" name="username" placeholder="请输入用户名" autocomplete="off"
+                            <input type="text" style="width: 160px" name="keyword" placeholder="请输入题目" autocomplete="off"
                                    class="layui-input">
                         </div>
 
@@ -64,7 +62,7 @@
                                     class="layui-icon">&#xe615;</i></button>
                         </div>
                     </form>
-                    <table id="userList" lay-filter="list"></table>
+                    <table id="list" lay-filter="list"></table>
                 </div>
             </div>
 
@@ -72,15 +70,16 @@
     </div>
 
 </div>
-<script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">新增用户</button>
-    </div>
-</script>
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增商品</button>
+    </div>
+</script>
+
 
 <script type="text/javascript">
     layui.config({
@@ -93,29 +92,33 @@
 
         form.on('submit(search)', function(data){
             table.render({
-                elem: '#userList'
-                ,page:false
-                ,toolbar: '#toolbarDemo'
-                ,url:'/admin/userList/search'
+                elem: '#list'
                 ,where:data.field
+                ,toolbar: '#toolbarDemo'
+                ,page:false
+                ,url:'/admin/info/search'
                 ,cellMinWidth: 80
                 ,parseData: function(res){ //res 即为原始返回的数据
-                    return {             //数据格式解析的回调函数，用于将返回的任意数据格式解析成 table 组件规定的数据格式。
-                        "code": res.status,   //解析接口状态
+                    return {
+                        "code": res.status,
                         "msg": res.msg,
                         "count": res.data.length,
                         "data": res.data
                     };
                 }
-                ,response: {  // response 参数来重新设定返回的数据格式
-                    statusCode: 200  //规定成功的状态码，默认：0
+                ,response: {
+                    statusCode: 200
                 }
                 ,cols: [
                     [
                         {field:'id', width:80, title: 'ID', sort: true}
-                        ,{field:'username',  title: '用户名'}
-                        ,{field:'address', title: '地址'}
-                        ,{field:'telephone',  title: '电话'}
+                        ,{field:'title',  title: '标题',edit:'text'}
+                        ,{field:'text', title: '内容',edit:'text'}
+                        ,{field:'sort', title: '种类',edit:'text'}
+                        ,{field:'pic', title: '图片',edit:'text'}
+                        ,{field:'time', title: '时间',templet:function (d) {
+                            return layui.util.toDateString(new Date(d.time).getTime(),'yyyy-MM-dd HH:mm:ss')
+                        }}
                         ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
                     ]
                 ]
@@ -125,32 +128,71 @@
 
 
         table.render({
-            elem: '#userList'
-            ,page:false
+            elem: '#list'
             ,toolbar: '#toolbarDemo'
-            ,url:'/admin/userList'
+            ,page:false
+            ,url:'/admin/info/all'
             ,cellMinWidth: 80
             ,parseData: function(res){ //res 即为原始返回的数据
-                return {
-                    "code": res.status,
-                    "msg": res.msg,
-                    "count": res.data.length,
-                    "data": res.data
+                return {                      //数据格式解析的回调函数，用于将返回的任意数据格式解析成 table 组件规定的数据格式。
+                    "code": res.status,  //解析接口状态
+                    "msg": res.msg,     //解析提示文本
+                    "count": res.data.length, //解析数据长度
+                    "data": res.data   //解析数据列表
                 };
             }
-            ,response: {
-                statusCode: 200
+            ,response: {  // response 参数来重新设定返回的数据格式
+                statusCode: 200//规定成功的状态码，默认：0
             }
             ,cols: [
                 [
-                {field:'id', width:80, title: 'ID', sort: true}
-                ,{field:'username',  title: '用户名'}
-                ,{field:'address', title: '地址'}
-                ,{field:'telephone',  title: '电话'}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
-            ]
+                    {field:'id', width:80, title: 'ID', sort: true}
+                    ,{field:'title',  title: '标题',edit:'text'}
+                    ,{field:'text', title: '内容',edit:'text'}
+                    ,{field:'sort', title: '种类',edit:'text'}
+                    ,{field:'pic', title: '图片',edit:'text'}
+                    ,{field:'time', title: '时间',templet:function (d) {
+                        return layui.util.toDateString(new Date(d.time).getTime(),'yyyy-MM-dd HH:mm:ss')
+                    }}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
+                ]
             ]
         });
+
+        table.on('edit(list)', function(obj){
+
+            $.ajax({
+                url:'/admin/info/edit',
+                type:'post',
+                data:obj.data,
+                success:function (ret) {
+                    if(ret.status == 200){
+                        layer.msg(ret.msg);
+                    }else{
+                        location.href = '/admin/information.html'
+                    }
+                }
+            });
+        });
+
+        form.on('switch(lockFilter)', function (obj) {
+            var switchId = obj.elem.getAttribute("switchId");
+            var state = obj.elem.checked === true ? 1 : 0;
+            $.ajax({
+                url: "/admin/info/edit",
+                type: "POST",
+                data: {id: switchId, state: state},
+                success: function (ret) {
+                    if(ret.status == 200){
+                        layer.msg(ret.msg);
+                    }else{
+                        location.href = '/admin/information.html';
+                    }
+                }
+            });
+
+        });
+
 
         table.on('toolbar(list)', function(obj){
             if(obj.event === 'add'){
@@ -160,33 +202,33 @@
                     , title: '请填写'
                     , skin: 'layui-layer-prompt'
                     , content: "<div class=''>" +
-                        "<input type='text' class='layui-layer-input' autocomplete='off' name='username' placeholder='帐号'>" +
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='title' placeholder='标题'>" +
                         "<br/>" +
-                        "<input type='password' class='layui-layer-input' autocomplete='off' name='password' placeholder='密码'>" +
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='text' placeholder='内容'>" +
                         "<br/>"+
-                        "<input type='text' class='layui-layer-input' autocomplete='off' name='address' placeholder='地址'>" +
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='sort' placeholder='种类'>" +
+                        "<br/>"+
+                        "<input type='text' class='layui-layer-input' autocomplete='off' name='pic' placeholder='图片地址'>" +
                         "<br/>" +
-                        "<input type='text' class='layui-layer-input' autocomplete='off' name='telephone' placeholder='电话'>" +
                         "</div>"
-                    , yes: function (index, layero) {
+                    , yes: function (index, layero) {//yes - 确定按钮回调方法
 
-                        var username = $(layero).find("input[name='username']").val();
-                        var password = $(layero).find("input[name='password']").val();
-                        var address = $(layero).find("input[name='address']").val();
-                        var telephone = $(layero).find("input[name='telephone']").val();
+                        var title = $(layero).find("input[name='title']").val();
+                        var text = $(layero).find("input[name='text']").val();
+                        var pic = $(layero).find("input[name='pic']").val();
 
                         $.ajax({
-                            url:'/admin/user/add',
+                            url:'/admin/info/add',
                             type:'post',
                             data:{
-                                'username':username,
-                                'password':password,
-                                'address':address,
-                                'telephone':telephone
+                                'title':title,
+                                'text':text,
+                                'pic':pic,
+
                             },
                             success:function (ret) {
                                 if(ret.status==200){
-                                    location.href = '/admin/index.html';
+                                    location.href = '/admin/information.html';
                                 }else{
                                     layer.msg(ret.msg);
                                 }
@@ -197,14 +239,15 @@
             }
         });
 
+
         table.on('tool(list)', function(obj){
             var data = obj.data;
             //console.log(obj)
             if(obj.event === 'del'){
-                layer.confirm("真的删除 "+data.username+" 用户吗？", function(index){
+                layer.confirm("真的删除 "+data.name+" 商品吗？", function(index){
 
                     $.ajax({
-                        url:'/admin/user/del',
+                        url:'/admin/info/del',
                         type:'post',
                         data:data,
                         success:function (ret) {
@@ -218,7 +261,6 @@
                 });
             }
         });
-
 
     })
 </script>

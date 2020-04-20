@@ -11,5 +11,5 @@ public interface InfoService {
 
     Result getAllSort();
 
-    Result search(String sort);
+    Result search(String sort,int index,int num);
 }

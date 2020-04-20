@@ -12,11 +12,10 @@ import java.util.List;
 
 @Mapper
 public interface InformationDao extends BaseMapper<Information> {
-    @Select("select * from sys_information  where sort = #{sort} order by time desc")
-    List<Information> getInformationListBySort(String sort);
+    @Select("select * from sys_information  where sort = #{sort} order by time desc limit #{index},#{num}")
+    List<Information> getInformationListBySort(String sort,int index,int num);
 
-    @Select("select * from sys_information order by time desc")
-    List<Information> getAllInformation();
+
 
     @Select("select  distinct sort from sys_information ")
     List<String> getAllSort();

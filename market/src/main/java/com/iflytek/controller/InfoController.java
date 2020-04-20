@@ -28,7 +28,7 @@ public class InfoController {
 
     @GetMapping("/search")
     @ResponseBody
-    public Result search(String sort){
-        return infoService.search(sort);
+    public Result search(String sort,int index,int num){
+        return infoService.search(sort,index,num);
     }
 }

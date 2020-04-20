@@ -2,15 +2,8 @@ package com.iflytek.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.iflytek.dao.AdminDao;
-import com.iflytek.dao.OrderDao;
-import com.iflytek.dao.ProductDao;
-import com.iflytek.dao.UserDao;
-import com.iflytek.enity.Orderv;
-import com.iflytek.enity.Admin;
-import com.iflytek.enity.Order;
-import com.iflytek.enity.Product;
-import com.iflytek.enity.User;
+import com.iflytek.dao.*;
+import com.iflytek.enity.*;
 import com.iflytek.service.AdminService;
 import com.iflytek.config.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +27,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     ProductDao productDao;
+    @Autowired
+    InformationDao infoDao;
 
     @Override
     public Result login(Admin admin) {
@@ -182,4 +177,42 @@ public class AdminServiceImpl implements AdminService {
             }}
         return Result.build(200,"查询成功",list);
     }
+    @Override
+    public Result infoAll(){
+        List<Information> list=infoDao.selectList(null);
+        return Result.build(200,"查询成功", list);
+    }
+    @Override
+    public Result  infoEdit(Information f){
+        int count = infoDao.updateById(f);
+        if(count > 0){
+            return Result.build(200,"更新成功");
+        }
+        return Result.build(500,"更新失败");
+    }
+    @Override
+    public Result infoSearch(String keyword) {
+        QueryWrapper<Information> wrapper = new QueryWrapper<>();
+        wrapper.like("title", keyword);
+        List<Information> products = infoDao.selectList(wrapper);
+        return Result.build(200,"查询成功", products);
+    }
+
+    @Override
+  public  Result infoAdd(Information f){
+        int count = infoDao.insert(f);
+        if(count > 0){
+            return Result.build(200,"新增成功");
+        }
+        return Result.build(500,"新增失败");
+    }
+    @Override
+   public  Result infoDel(Information f){
+        int count = infoDao.deleteById(f.getId());
+        if(count > 0){
+            return Result.build(200,"删除成功");
+        }
+        return Result.build(500,"删除失败");
+    }
+
 }

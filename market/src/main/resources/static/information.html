@@ -29,7 +29,7 @@
 
     <ul class="layui-nav layui-bg-green " id="sort">
 
-
+      <li class="layui-nav-item layui-this"><a href="information.html">全部</a></li>
     </ul>
 
     <script type="text/html" id="sortListTpl">
@@ -112,12 +112,29 @@
     //  });
 
 
+
+
+    function getQueryVariable(variable)
+    {
+      var query = window.location.search.substring(1);//获取url中"?"符后的字串，截取？后的字符串
+      var vars = query.split("&");//字符串按照&拆分
+      for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");//获取每一个参数
+        if(pair[0] == variable){return pair[1];}//获取参数值
+      }
+      return("");
+    }
+
+    var sort = decodeURIComponent(getQueryVariable("sort"));
+
     function showRecord(pageNo,pageSize){
       $('#list-cont').empty();
-      $.get("/info/all",
+      $.get("/info/search",
               {
+                'sort':sort,
                 index:pageNo,
                 num:pageSize
+
               },
               function (res) {
                 //加载后台返回的List集合数据
@@ -130,12 +147,14 @@
       );
 
     }
+
     $.get('/info/sort',function (res) {
       laytpl(sortListTpl.innerHTML).render(res.data, function (html) {
 
         $('#sort').append(html);
       });
     }, 'json');
+
 
       laypage.render({
         elem: 'demo0'

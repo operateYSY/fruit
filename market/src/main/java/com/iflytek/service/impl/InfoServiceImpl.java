@@ -31,8 +31,15 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
-  public  Result search(String sort){
-        List<Information> list = infoDao.getInformationListBySort(sort);
+  public  Result search(String sort,int index,int num){
+
+        List<Information> list;
+        if(!"".equals(sort) && sort!=null){
+            list = infoDao.getInformationListBySort(sort,index,num);
+
+        }else{
+            list = infoDao.getPageList(index,num);
+        }
         return Result.build(200,"查询成功", list);
     }
 
