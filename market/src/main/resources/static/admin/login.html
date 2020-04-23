@@ -41,8 +41,10 @@
                 //按钮【按钮一】的回调
                 var username = $(layero).find("input[name='username']").val();
                 var password = $(layero).find("input[name='password']").val();
+
                 console.log(username);
                 console.log(password);
+
                 $.ajax({
                     url:'/admin/login',
                     type:'post',

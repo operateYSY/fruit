@@ -1,14 +1,27 @@
 package com.iflytek.controller;
 
+import com.iflytek.config.UploadUtils;
+import com.iflytek.dao.InformationDao;
 import com.iflytek.enity.*;
 import com.iflytek.service.AdminService;
 import com.iflytek.config.Result;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -133,4 +146,49 @@ public class AdminController {
     public Result infoDel(Information i){
         return adminService.infoDel(i);
     }
+
+    @PostMapping("/upload")
+    @ResponseBody
+    public Map<String,Object> upload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request,Long id)
+    {
+        Map<String,Object> map  = new HashMap<>();
+        //String uploadDir = "B:/testpic/";
+        File directory = new File("src/main/resources/static/res/static/img/");
+
+
+
+        try {
+
+            String  uploadDir= directory.getCanonicalPath();
+            // 图片路径
+            String imgUrl = null;
+            //上传
+            String filename = UploadUtils.upload(file, uploadDir, file.getOriginalFilename(),1);//上传文件
+            if (filename != null) {
+                imgUrl =  "/img/" + filename;
+            }
+
+
+          String pic=  "src/main/resources/static/res/static"+adminService.infoGetPicUrl(id);
+
+            String n=UploadUtils.upload(file, pic, file.getOriginalFilename(),2);//删除原文件
+
+            adminService.infoInterPic(id,imgUrl);//更新数据库
+
+            map.put("code",200);
+            map.put("msg","成功");
+            map.put("data",imgUrl);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code",500);
+            map.put("msg","上传失败");
+            map.put("data",null);
+            return map;
+        }
+
+
+    }
+
+
 }

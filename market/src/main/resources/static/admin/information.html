@@ -8,7 +8,9 @@
     <script type="text/javascript" src="/res/layui/layui.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
 </head>
+
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
@@ -43,6 +45,8 @@
         </div>
     </div>
 
+
+
     <div class="layui-body">
         <div style="padding: 15px;">
             <div class="layui-card">
@@ -53,7 +57,7 @@
                     <form class="layui-form layui-col-space5">
 
                         <div class="layui-inline layui-show-xs-block">
-                            <input type="text" style="width: 160px" name="keyword" placeholder="请输入题目" autocomplete="off"
+                            <input type="text" style="width: 160px" name="keyword" placeholder="请输入标题" autocomplete="off"
                                    class="layui-input">
                         </div>
 
@@ -71,8 +75,21 @@
 
 </div>
 
+<script type="text/html" id="imgtmp">
+    <img src="{{d.pic}}" style="height: 100px;width: 108px;"/>
+</script>
+
+
+
+
+
+
+
+
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="upload" >图片</a>
+
 </script>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
@@ -80,22 +97,42 @@
     </div>
 </script>
 
+<!--解决图片大小问题-->
+<style type="text/css">
+    .layui-table-cell{
+        text-align:center;
+        height: auto;
+        white-space: normal;
+    }
+    .layui-table img{
+        max-width:300px
+    }
+</style>
 
 <script type="text/javascript">
     layui.config({
         base: '/res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
-    }).use(['jquery', 'form','element','table'], function () {
+    }).use(['jquery', 'form','element','table','upload','flow'], function () {
+        var flow=layui.flow;
+        var upload = layui.upload;
         var $ = layui.$,
             form = layui.form;
         var element = layui.element;
         var table = layui.table;
-
+// 流加载
+        flow.lazyimg({
+            elem: '#imgtmp img'
+          //一般不用设置，此处只是演示需要。
+        });
         form.on('submit(search)', function(data){
             table.render({
                 elem: '#list'
                 ,where:data.field
                 ,toolbar: '#toolbarDemo'
-                ,page:false
+                ,page:{
+                    limit: 10,//指定每页显示条数
+                    limits: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]//每页条数的选择项
+                }
                 ,url:'/admin/info/search'
                 ,cellMinWidth: 80
                 ,parseData: function(res){ //res 即为原始返回的数据
@@ -115,13 +152,15 @@
                         ,{field:'title',  title: '标题',edit:'text'}
                         ,{field:'text', title: '内容',edit:'text'}
                         ,{field:'sort', title: '种类',edit:'text'}
-                        ,{field:'pic', title: '图片',edit:'text'}
+                        ,{field:'pic', title: '图片',templet:"#imgtmp",align: "center"}
                         ,{field:'time', title: '时间',templet:function (d) {
                             return layui.util.toDateString(new Date(d.time).getTime(),'yyyy-MM-dd HH:mm:ss')
                         }}
                         ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
                     ]
                 ]
+
+
             });
             return false;
         });
@@ -132,7 +171,8 @@
             ,toolbar: '#toolbarDemo'
             ,page:false
             ,url:'/admin/info/all'
-            ,cellMinWidth: 80
+            ,cellMinWidth: 100
+
             ,parseData: function(res){ //res 即为原始返回的数据
                 return {                      //数据格式解析的回调函数，用于将返回的任意数据格式解析成 table 组件规定的数据格式。
                     "code": res.status,  //解析接口状态
@@ -150,21 +190,26 @@
                     ,{field:'title',  title: '标题',edit:'text'}
                     ,{field:'text', title: '内容',edit:'text'}
                     ,{field:'sort', title: '种类',edit:'text'}
-                    ,{field:'pic', title: '图片',edit:'text'}
+                    ,{field:'pic', title: '图片',templet:"#imgtmp",style: "height:110px;"}
                     ,{field:'time', title: '时间',templet:function (d) {
                         return layui.util.toDateString(new Date(d.time).getTime(),'yyyy-MM-dd HH:mm:ss')
                     }}
-                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
                 ]
             ]
         });
 
         table.on('edit(list)', function(obj){
-
+            var data = obj.data;
             $.ajax({
                 url:'/admin/info/edit',
                 type:'post',
-                data:obj.data,
+                data:{
+                    'id':data.id,
+                    'title':data.title,
+                    'text':data.text,
+                    'sort':data.sort
+                },
                 success:function (ret) {
                     if(ret.status == 200){
                         layer.msg(ret.msg);
@@ -208,7 +253,7 @@
                         "<br/>"+
                         "<input type='text' class='layui-layer-input' autocomplete='off' name='sort' placeholder='种类'>" +
                         "<br/>"+
-                        "<input type='text' class='layui-layer-input' autocomplete='off' name='pic' placeholder='图片地址'>" +
+                        "<input type='text' class='layui-layer-photos' autocomplete='off' name='pic' placeholder='图片地址'>" +
                         "<br/>" +
                         "</div>"
                     , yes: function (index, layero) {//yes - 确定按钮回调方法
@@ -221,6 +266,7 @@
                             url:'/admin/info/add',
                             type:'post',
                             data:{
+
                                 'title':title,
                                 'text':text,
                                 'pic':pic,
@@ -244,12 +290,14 @@
             var data = obj.data;
             //console.log(obj)
             if(obj.event === 'del'){
-                layer.confirm("真的删除 "+data.name+" 商品吗？", function(index){
+                layer.confirm("真的要删除"+data.title+" 吗？", function(index){
 
                     $.ajax({
                         url:'/admin/info/del',
                         type:'post',
-                        data:data,
+                        data:{
+                            'id':data.id
+                        },
                         success:function (ret) {
                             layer.msg(ret.msg);
                             if(ret.status==200){
@@ -260,7 +308,76 @@
                     layer.close(index);
                 });
             }
+           else if(obj.event === 'upload') {
+                layer.open({
+                    type: 1 //Page层类型
+                    , btn: ["确定", "取消"]
+                    , title: '请填写'
+                    , skin: 'layui-layer-prompt'
+                    , content: "<div class=''>" +
+
+                        "<img class='layui-upload-img' id='demo1'>" +
+                        "<br/>"+
+                        "<button type='button' class='layui-btn' id='test1'>选择图片</button>" +
+                        "<br/>"+
+                        "<input type='text' class='layui-layer-photos' autocomplete='off' id='pic' placeholder='图片地址'>" +
+                        "<br/>" +
+                        "<button type='button' class='layui-btn' id='load'>上传</button>" +
+                        "<br/>"+
+                        "</div>"
+                    , yes: function (index, layero) {//yes - 确定按钮回调方法
+
+                        var title = $(layero).find("input[name='title']").val();
+                        var text = $(layero).find("input[name='text']").val();
+                        var pic = $(layero).find("input[name='pic']").val();
+                        location.href = '/admin/information.html';
+                    }
+                });
+                        upload.render({
+                        elem: '#test1'//选择文件的DOM对象
+                        ,auto: false //选择文件后不自动上传
+                        ,bindAction: '#load' //指向一个按钮触发上传
+                        ,acceptMime: 'image/*'
+                        ,url: '/admin/upload'
+                            ,data:{
+                             'id':data.id
+                           }
+
+                        ,choose:function(obj){//选择文件的回调，obj为选中的文件
+                            //将每次选择的文件追加到文件队列
+                            var file = obj.pushFile();
+                            //预览选中的文件（本地文件）
+                            obj.preview(function(index,file,result){
+                                $('#demo1').attr('style', 'width:60%;height:60%;');
+                                $('#demo1').attr('src', result);
+
+                            });
+                            obj.resetFile(index,file, data.id+'.jpg')
+                            $('#pic').attr(data.id+'.jpg');
+                        }
+                        ,before: function(obj){//文件上传前的回调
+
+                        }
+
+                        ,done: function(res){
+
+                              layer.msg(res.msg);
+                                location.href = '/admin/information.html';
+
+                            //上传成功
+                        }
+                        ,error: function(){
+                            //演示失败状态，并实现重传
+
+
+                        }
+
+                    })
+
+
+            }
         });
+
 
     })
 </script>

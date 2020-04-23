@@ -200,6 +200,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
   public  Result infoAdd(Information f){
+
         int count = infoDao.insert(f);
         if(count > 0){
             return Result.build(200,"新增成功");
@@ -207,12 +208,31 @@ public class AdminServiceImpl implements AdminService {
         return Result.build(500,"新增失败");
     }
     @Override
-   public  Result infoDel(Information f){
-        int count = infoDao.deleteById(f.getId());
+   public  Result infoDel(Information i){
+
+        int count = infoDao.deleteById(i.getId());
         if(count > 0){
             return Result.build(200,"删除成功");
         }
         return Result.build(500,"删除失败");
+    }
+    @Override
+   public  Result infoInterPic(Long id,String url){
+        Information info=new Information();
+        info.setId(id);
+        info.setPic(url);
+       int count= infoDao.updateById(info);
+        if(count > 0){
+            return Result.build(200,"更新成功");
+        }
+        return Result.build(500,"更新失败");
+    }
+
+
+    @Override
+    public  String infoGetPicUrl(Long id) {
+   String url=infoDao.getPic(id);
+   return url;
     }
 
 }

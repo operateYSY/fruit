@@ -12,6 +12,7 @@
 </head>
 <body>
 
+
 <div id="header"></div>
 
 
@@ -52,7 +53,11 @@
           <div class="item" style="background-color: #00F7DE" >
 
             <div class="img">
+              {{#  if(item.pic ==null||item.pic==""){ }}
               <img src="../res/static/img/error.jpg" alt="">
+              {{# }else{ }}
+              <img style="width: 280px;height: 250px;" src="{{item.pic}}" alt="">
+              {{# } }}
             </div>
             <div class="text">
               <h4>{{item.title}}</h4>
@@ -64,7 +69,11 @@
           <div class="item" >
 
             <div class="img">
+              {{#  if(item.pic ==null||item.pic==""){ }}
               <img src="../res/static/img/error.jpg" alt="">
+              {{# }else{ }}
+              <img style="width: 280px;height: 250px;" src="{{item.pic}}" alt="">
+              {{# } }}
             </div>
             <div class="text">
               <h4>{{item.title}}</h4>
@@ -85,6 +94,7 @@
       </div>
     </div>
   </div>
+
 
 <script>
   layui.config({

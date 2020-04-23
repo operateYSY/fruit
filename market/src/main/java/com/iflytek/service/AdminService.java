@@ -40,6 +40,8 @@ public interface AdminService {
     Result infoAll();
     Result infoEdit(Information f);
     Result infoAdd(Information f);
-    Result infoDel(Information f);
+    Result infoDel(Information i);
     Result infoSearch(String keyword);
+    Result infoInterPic(Long id,String url);
+    String infoGetPicUrl(Long id);
 }
