@@ -16,7 +16,6 @@ public interface InformationDao extends BaseMapper<Information> {
     List<Information> getInformationListBySort(String sort,int index,int num);
 
 
-
     @Select("select  distinct sort from sys_information ")
     List<String> getAllSort();
 
