@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="../res/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="../res/layui/css/layui.css">
+  <script type="text/javascript" src="../res/layui/layui.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body id="list-cont">
+<div id="header"></div>
+
+
+
+
+  <div class="content content-nav-base information-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="recommend.html"class="active" >推荐</a>
+            <a href="index.html" >所有商品</a>
+            <a href="information.html" >商店资讯</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="category-con">
+
+      <div class="category-banner">
+        <div class="w1200">
+          <a href="/product.html?p=2">
+            <img src="../res/static/img/banner1.png">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="floors">
+      <div class="sk">
+        <div class="sk_inner w1200">
+          <div class="sk_hd">
+
+              <img src="/img/s_img1.jpg">
+
+          </div>
+          <div class="sk_bd">
+            <div class="layui-carousel" id="test1">
+
+              <div carousel-item >
+
+                <div class="item-box" id="item-box" >
+
+                </div>
+                <div class="item-box" id="item-box1" >
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/html" id="recommendList">
+
+
+      {{# layui.each(d,function(index,item){}}
+
+      <div class="item">
+        <a href="/product.html?p={{item.productId}}"><img src="{{item.pic}}"></a>
+        <div class="title">{{item.txt}}</div>
+        <div class="price">
+          <span>￥{{item.price}}</span>
+        </div>
+        </div>
+
+      {{# }); }}
+
+</script>
+
+
+
+
+    <div class="product-cont w1200" id="product-cont">
+      <div class="product-item product-item1 layui-clear">
+        <div class="left-title">
+          <h4><i>1F</i></h4>
+          <img src="../res/static/img/icon_gou.png">
+          <h5>水产推荐</h5>
+        </div>
+        <div class="right-cont">
+          <a href="index.html?sort=水产" class="top-img"><img style="width:1000px;height: 200px;" src="/img/tuan_img_banner.png" alt=""></a>
+          <div class="img-box" id="test2">
+
+
+          </div>
+        </div>
+      </div>
+      <script type="text/html" id="contList">
+        {{# layui.each(d,function(index,item){}}
+        <a href="/product.html?p={{item.productId}}"><img src="{{item.pic}}"></a>
+        {{# }); }}
+      </script>
+
+
+      <div class="product-item product-item2 layui-clear">
+        <div class="left-title">
+          <h4><i>2F</i></h4>
+          <img src="../res/static/img/icon_gou.png">
+          <h5>新鲜蔬菜</h5>
+        </div>
+        <div class="right-cont">
+          <a href="index.html?sort=蔬菜" class="top-img"><img style="width:1000px;height: 200px;" src="/img/img11.png" alt=""></a>
+          <div class="img-box"id="test3">
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="product-item product-item3 layui-clear">
+        <div class="left-title">
+          <h4><i>3F</i></h4>
+          <img src="../res/static/img/icon_gou.png">
+          <h5>可口水果</h5>
+        </div>
+        <div class="right-cont">
+          <a href="index.html?sort=水果" class="top-img"><img style="width:1000px;height: 200px;" src="/img/img12.png" alt=""></a>
+          <div class="img-box" id="test4">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+    <div class="product-list-box" id="product-list-box">
+      <div class="product-list-cont w1200">
+        <h4>更多推荐</h4>
+        <div class="product-item-box layui-clear" id="test5">
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/html" id="List">
+  {{# layui.each(d,function(index,item){}}
+  <div class="list-item">
+    <a href="/product.html?p={{item.id}}"><img style="width:160px;height:160px;" src="{{item.pic}}" alt=""></a>
+    <p>{{item.description}}</p>
+    <span>￥{{item.price}}</span>
+  </div>
+  {{# }); }}
+</script>
+
+  <script type="text/javascript">
+
+layui.config({
+    base: '../res/static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','jquery','element','laytpl','carousel','laypage'],function(){
+          var $ = layui.$,
+
+          laytpl = layui.laytpl,
+
+          element = layui.element,
+
+          laypage = layui.laypage,
+
+          carousel = layui.carousel;
+
+          mm = layui.mm;
+
+  $("#header").load("/header.html");
+
+     var option = {
+        elem: '#test1'
+        ,width: '100%' //设置容器宽度
+        ,arrow: 'always'
+        ,height:'298' 
+        ,indicator:'none'
+      }
+      carousel.render(option);
+
+  $.get('/recommend/search',{
+       "state":1
+          }
+          ,function (res) {
+    laytpl(recommendList.innerHTML).render(res.data, function (html) {
+
+      $('#item-box').append(html);
+     
+    });
+  }, 'json');
+  $.get('/recommend/search',{
+            "state":2
+          }
+          ,function (res) {
+            laytpl(recommendList.innerHTML).render(res.data, function (html) {
+
+
+              $('#item-box1').append(html);
+            });
+          }, 'json');
+  $.get('/recommend/search',{
+            "state":3,
+            "sort":"水产"
+          }
+          ,function (res) {
+            laytpl(contList.innerHTML).render(res.data, function (html) {
+
+
+              $('#test2').append(html);
+            });
+          }, 'json');
+  $.get('/recommend/search',{
+            "state":3,
+            "sort":"蔬菜"
+          }
+          ,function (res) {
+            laytpl(contList.innerHTML).render(res.data, function (html) {
+
+
+              $('#test3').append(html);
+            });
+          }, 'json');
+  $.get('/recommend/search',{
+            "state":3,
+            "sort":"水果"
+          }
+          ,function (res) {
+            laytpl(contList.innerHTML).render(res.data, function (html) {
+
+
+              $('#test4').append(html);
+            });
+          }, 'json');
+
+  $.get('/recommend/all'
+          ,function (res) {
+            laytpl(List.innerHTML).render(res.data, function (html) {
+
+
+              $('#test5').append(html);
+            });
+          }, 'json');
+
+
+
+
+
+
+      // 模版引擎导入
+     // var ins = carousel.render(option);
+     // var html = demo.innerHTML;
+     // var listCont = document.getElementById('list-cont');
+     // // console.log(layui.router("#/about.html"))
+     //  mm.request({
+     //    url: '../json/index.json',
+     //    success : function(res){
+     //      console.log(res)
+     //      listCont.innerHTML = mm.renderHtml(html,res)
+     //      ins.reload(option);
+     //    },
+     //    error: function(res){
+     //      console.log(res);
+     //    }
+     //  })
+    
+
+});
+  </script>
+</body>
+</html>

@@ -253,14 +253,13 @@
                         "<br/>"+
                         "<input type='text' class='layui-layer-input' autocomplete='off' name='sort' placeholder='种类'>" +
                         "<br/>"+
-                        "<input type='text' class='layui-layer-photos' autocomplete='off' name='pic' placeholder='图片地址'>" +
-                        "<br/>" +
+
                         "</div>"
                     , yes: function (index, layero) {//yes - 确定按钮回调方法
 
                         var title = $(layero).find("input[name='title']").val();
                         var text = $(layero).find("input[name='text']").val();
-                        var pic = $(layero).find("input[name='pic']").val();
+
 
                         $.ajax({
                             url:'/admin/info/add',
@@ -268,8 +267,8 @@
                             data:{
 
                                 'title':title,
-                                'text':text,
-                                'pic':pic,
+                                'text':text
+
 
                             },
                             success:function (ret) {

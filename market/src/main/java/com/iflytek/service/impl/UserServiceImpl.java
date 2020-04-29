@@ -2,6 +2,7 @@ package com.iflytek.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.iflytek.config.SafeUtils;
 import com.iflytek.dao.UserDao;
 import com.iflytek.enity.User;
 import com.iflytek.service.UserService;
@@ -21,10 +22,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result login(User user) {
+        user.setPassword(SafeUtils.encode(user.getPassword()));
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("username", user.getUsername());
         wrapper.eq("password", user.getPassword());
         User u = userDao.selectOne(wrapper);
+
         if (u != null){
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             request.getSession().setAttribute("userId", u.getId());
@@ -41,6 +44,7 @@ public class UserServiceImpl implements UserService {
         if(exist > 0){
             return Result.build(500,"用户名已存在~");
         }
+        user.setPassword(SafeUtils.encode(user.getPassword()));
         int count = userDao.insert(user);
         if(count > 0){
             return Result.build(200,"注册成功");
@@ -68,9 +72,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result setPwd(User user, String oldPwd) {
+        user.setPassword(SafeUtils.encode(user.getPassword()));
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", user.getId());
-        wrapper.eq("password", oldPwd);
+        wrapper.eq("password", SafeUtils.encode(oldPwd));
         wrapper.set("password", user.getPassword());
         userDao.update(user,wrapper);
         int count = userDao.updateById(user);

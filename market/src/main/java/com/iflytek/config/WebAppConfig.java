@@ -18,6 +18,7 @@ public class WebAppConfig implements WebMvcConfigurer {
                         "/login.html",
                         "/register.html",
                         "/information.html",
+                        "/recommend.html",
                         "/product/all",
                         "/product/sort",
                         "/product/search",
@@ -26,7 +27,9 @@ public class WebAppConfig implements WebMvcConfigurer {
                         "/info/all",
                         "/info/sort",
                         "/info/search",
-                        "/img/**"
+                        "/img/**",
+                        "/recommend/search",
+                        "/recommend/all"
                 );
             // excludePathPatterns("/login", "/register") 表示除了登陆与注册之外，因为登陆注册不需要登陆也可以访问
         registry.addInterceptor(new AdminInterceptor())
