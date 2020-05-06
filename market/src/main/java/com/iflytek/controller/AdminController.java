@@ -1,27 +1,18 @@
 package com.iflytek.controller;
 
 import com.iflytek.config.UploadUtils;
-import com.iflytek.dao.InformationDao;
 import com.iflytek.enity.*;
 import com.iflytek.service.AdminService;
 import com.iflytek.config.Result;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -189,6 +180,32 @@ public class AdminController {
 
 
     }
+    @GetMapping("/recom/all")
+    @ResponseBody
+    public Result recomAll(){
+        return adminService.recomAll();
+    }
 
+    @PostMapping("/recom/edit")
+    @ResponseBody
+    public Result recomRdit(RecommendView r){
+        return adminService.recomEdit(r);
+    }
 
+    @GetMapping("/recom/search")
+    @ResponseBody
+    public Result recomSearch(String keyword){
+        return adminService.recomSearch(keyword);
+    }
+
+    @PostMapping("/recom/add")
+    @ResponseBody
+    public Result addRecom(Recommend r){
+        return adminService.recomAdd(r);
+    }
+    @PostMapping("/recom/del")
+    @ResponseBody
+    public Result infoDel(Recommend r){
+        return adminService.recomDel(r);
+    }
 }

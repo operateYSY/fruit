@@ -17,7 +17,7 @@ public class RecomController{
 
     @ResponseBody
     @GetMapping("/search")
-    public Result search(int state,String sort){
+    public Result search(Integer state,String sort){
         return recomService.search(state,sort);
     }
     @ResponseBody

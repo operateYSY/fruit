@@ -2,6 +2,7 @@ package com.iflytek.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.iflytek.config.SafeUtils;
 import com.iflytek.dao.*;
 import com.iflytek.enity.*;
 import com.iflytek.service.AdminService;
@@ -29,6 +30,10 @@ public class AdminServiceImpl implements AdminService {
     ProductDao productDao;
     @Autowired
     InformationDao infoDao;
+    @Autowired
+    RecommendDao recommendDao;
+    @Autowired
+    RecommendViewDao recommendViewDao;
 
     @Override
     public Result login(Admin admin) {
@@ -90,12 +95,14 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Result addUser(User u) {
+
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("username", u.getUsername());
         int exist = userDao.selectCount(wrapper);
         if(exist > 0){
             return Result.build(500,"用户名已存在~");
         }
+        u.setPassword(SafeUtils.encode(u.getPassword()));
         int count = userDao.insert(u);
         if(count > 0){
             return Result.build(200,"注册成功");
@@ -235,4 +242,43 @@ public class AdminServiceImpl implements AdminService {
    return url;
     }
 
+    @Override
+    public Result recomAll(){
+        List<RecommendView> list=recommendViewDao.selectList(null);
+        return Result.build(200,"查询成功", list);
+    }
+    @Override
+    public Result  recomEdit(RecommendView r){
+        int count = recommendViewDao.updateById(r);
+        if(count > 0){
+            return Result.build(200,"更新成功");
+        }
+        return Result.build(500,"更新失败");
+    }
+    @Override
+    public Result recomSearch(String keyword) {
+        QueryWrapper<RecommendView> wrapper = new QueryWrapper<>();
+        wrapper.like("state", keyword);
+        List<RecommendView> recommends = recommendViewDao.selectList(wrapper);
+        return Result.build(200,"查询成功", recommends);
+    }
+    @Override
+    public  Result recomAdd(Recommend r){
+
+
+        int count = recommendDao.insert(r);
+        if(count > 0){
+            return Result.build(200,"新增成功");
+        }
+        return Result.build(500,"新增失败");
+    }
+    @Override
+    public  Result recomDel(Recommend r){
+
+        int count = recommendDao.deleteById(r.getId());
+        if(count > 0){
+            return Result.build(200,"删除成功");
+        }
+        return Result.build(500,"删除失败");
+    }
 }

@@ -44,4 +44,10 @@ public interface AdminService {
     Result infoSearch(String keyword);
     Result infoInterPic(Long id,String url);
     String infoGetPicUrl(Long id);
+
+    Result recomAll();
+    Result recomEdit(RecommendView r);
+    Result recomSearch(String keyword);
+    Result recomAdd(Recommend r);
+    Result recomDel(Recommend r);
 }

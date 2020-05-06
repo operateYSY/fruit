@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+    <link rel="stylesheet" type="text/css" href="/res/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/res/layui/css/layui.css">
+    <script type="text/javascript" src="/res/layui/layui.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+</head>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">管理员后台</div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    用户
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/admin/person.html">修改密码</a></dd>
+                </dl>
+            </li>
+            <!--            <li class="layui-nav-item"><a href="">退出</a></li>-->
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/admin/index.html">用户管理</a></dd>
+                        <dd><a href="/admin/product.html">商品管理</a></dd>
+                        <dd><a href="/admin/order.html">订单管理</a></dd>
+                        <dd><a href="/admin/information.html">资讯管理</a></dd>
+                        <dd><a href="/admin/recommend.html">推荐管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    推荐列表
+                </div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-col-space5">
+
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" style="width: 160px" name="keyword" placeholder="请输入状态" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="search"><i
+                                    class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                    <table id="list" lay-filter="list"></table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/html" id="imgtmp">
+    <img src="{{d.pic}}" style="height: 100px;width: 108px;"/>
+</script>
+
+
+
+
+
+
+
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
+
+</script>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增推荐</button>
+    </div>
+</script>
+
+
+
+<div id="select1" style="display: none">
+    <form class="layui-form" action="">
+        <label class="layui-form-label">商品id</label>   <input type='text' class='layui-layer-input' autocomplete='off' name='productId' id='productId' placeholder='商品id'>
+        <br/>
+        <label class="layui-form-label">商品名</label>   <input type='text' class='layui-layer-input' autocomplete='off' name='name' id='name' placeholder='商品名'>
+
+        <br/>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <select id="select_state" name='select_state' lay-filter='select_state' lay-verify='' >
+                    <option value="">请选择</option>
+                    <option value="1">轮播图1层</option>
+                    <option value="2">轮播图2层</option>
+                    <option value="3">推荐栏</option>
+
+                </select>
+            </div>
+        </div>
+
+        <br/>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">促销信息</label>
+            <div class="layui-input-block">
+                <textarea id="txt" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+    </form>
+</div>
+<!--商品table-->
+<div id="hidden1" lay-filter="hidden1" style="display: none">
+    <table id="product_result" lay-filter="product_result"></table>
+</div>
+<!-- 添加 弹出部门表格的 tool（里面的按钮）-->
+<script type="text/html" id="hidden1-table-tool">
+     <a class="layui-btn layui-btn-xs" lay-event="select">选择</a>
+</script>
+
+
+
+<!--解决图片大小问题-->
+<style type="text/css">
+    .layui-table-cell{
+        text-align:center;
+        height: auto;
+        white-space: normal;
+    }
+    .layui-table img{
+        max-width:300px
+    }
+</style>
+
+<script type="text/javascript">
+    layui.config({
+        base: '/res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery', 'form','element','table','upload','flow'], function () {
+        var flow=layui.flow;
+        var upload = layui.upload;
+        var $ = layui.$,
+            form = layui.form;
+        var element = layui.element;
+        var table = layui.table;
+// 流加载
+        flow.lazyimg({
+            elem: '#imgtmp img'
+            //一般不用设置，此处只是演示需要。
+        });
+        form.on('submit(search)', function(data){
+            table.render({
+                elem: '#list'
+                ,where:data.field
+                ,toolbar: '#toolbarDemo'
+                ,page:{
+                    limit: 10,//指定每页显示条数
+                    limits: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]//每页条数的选择项
+                }
+                ,url:'/admin/recom/search'
+                ,cellMinWidth: 80
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    return {
+                        "code": res.status,
+                        "msg": res.msg,
+                        "count": res.data.length,
+                        "data": res.data
+                    };
+                }
+                ,response: {
+                    statusCode: 200
+                }
+                ,cols: [
+                    [
+                        {field:'id', width:80, title: 'ID', sort: true}
+                        ,{field:'productId',  title: '商品ID',edit:'text'}
+                        ,{field:'name', title: '商品名'}
+                        ,{field:'sort', title: '种类',sort: true}
+                        ,{field:'txt', title: '促销描述',edit:'text'}
+                        ,{field:'pic', title: '图片',templet:"#imgtmp",style: "height:110px;"}
+                        ,{field:'state1', title: '状态',edit:'text',sort: true}
+                        ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+                    ]
+                ]
+
+
+            });
+            return false;
+        });
+
+
+        table.render({
+            elem: '#list'
+            ,toolbar: '#toolbarDemo'
+            ,page:false
+            ,url:'/admin/recom/all'
+            ,cellMinWidth: 100
+
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {                      //数据格式解析的回调函数，用于将返回的任意数据格式解析成 table 组件规定的数据格式。
+                    "code": res.status,  //解析接口状态
+                    "msg": res.msg,     //解析提示文本
+                    "count": res.data.length, //解析数据长度
+                    "data": res.data   //解析数据列表
+                };
+            }
+            ,response: {  // response 参数来重新设定返回的数据格式
+                statusCode: 200//规定成功的状态码，默认：0
+            }
+            ,cols: [
+                [
+                    {field:'id', width:80, title: 'ID', sort: true}
+                    ,{field:'productId',  title: '商品ID',edit:'text'}
+                    ,{field:'name', title: '商品名'}
+                    ,{field:'sort', title: '种类',sort: true}
+                    ,{field:'txt', title: '促销描述',edit:'text'}
+                    ,{field:'pic', title: '图片',templet:"#imgtmp",style: "height:110px;"}
+                    ,{field:'state1', title: '状态',edit:'text',sort: true}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+                ]
+            ]
+        });
+
+        table.on('edit(list)', function(obj){
+            var data = obj.data;
+            $.ajax({
+                url:'/admin/recom/edit',
+                type:'post',
+                data:{
+                    'id':data.id,
+                    'productId':data.productId,
+                    'txt':data.txt,
+                    'state':data.state
+                },
+                success:function (ret) {
+                    if(ret.status == 200){
+                        layer.msg(ret.msg);
+                    }else{
+
+                    }
+                    //location.href = '/admin/recommend.html'
+                }
+            });
+        });
+
+
+
+//table渲染
+        var product_result_table_options = {
+            elem: '#product_result'
+            ,url: '/admin/product/all'
+            ,method : 'get'
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {                      //数据格式解析的回调函数，用于将返回的任意数据格式解析成 table 组件规定的数据格式。
+                    "code": res.status,  //解析接口状态
+                    "msg": res.msg,     //解析提示文本
+                    "count": res.data.length, //解析数据长度
+                    "data": res.data   //解析数据列表
+                };
+            }
+            ,response: {  // response 参数来重新设定返回的数据格式
+                statusCode: 200//规定成功的状态码，默认：0
+            }
+            ,title : '商品列表'
+            ,cols : [ [
+                { field : 'id', title : '商品ID', width : 100,sort: true}
+                ,{ field : 'name', title : '商品名', width : 150 }
+                ,{ field : 'price', title : '价格', width : 100 ,sort: true}
+                ,{ field : 'sort', title : '商品种类', width : 120 ,sort: true }
+                ,{ fixed : 'right', title : '操作', toolbar : '#hidden1-table-tool', width : 80 } ] ]
+        };
+
+
+        table.render(product_result_table_options);
+
+// “客户”输入框的光标聚焦事件的触发函数， 弹出弹层，弹层上显示所有的客户，以供选择。
+        function product_input_focus_handler() {
+            layer.open({
+                type : 1
+                , area : [ '600px', '450px' ]
+                , content : $('#hidden1')
+                , success : function () {
+                    // 重新加载表格中的数据
+                    table.reload('product_result', product_result_table_options);
+                    $('#hidden1').css('display', 'block');
+                }
+            });
+        }
+//客户点击选择按钮时数据回填
+        function product_tool_event_handler(obj) {
+            console.info(obj);
+            var data = obj.data;
+            switch (obj.event) {
+                case 'select':
+                    $('#productId').val(data.id);
+                    $('#name').val(data.name);
+                    layer.close(layer.index);
+                    break;
+            }
+        }
+
+
+// part 3: 让 layui 为页面的元素绑定事件处理函数
+        table.on('tool(product_result)', product_tool_event_handler); // 为页面上的table上的tool绑定事件处理函数
+
+// part 4: 为输入框绑定光标聚焦事件的触发该函数，
+        $('#name').focus(product_input_focus_handler);
+        $('#productId').focus(product_input_focus_handler);
+
+ form.on('select(select_state)',function(data){
+     console.log(data.elem);
+     console.log(data.value);
+     $("#select_state").val(data.value);
+     console.log(data.othis);
+
+ });
+        table.on('toolbar(list)', function(obj){
+            if(obj.event === 'add'){
+                layer.open({
+                    type: 1 //Page层类型
+                     ,area:['500px','600px']
+                    , btn: ["确定", "取消"]
+                    , title: '请填写'
+                     , skin: 'layui-layer-prompt'
+                    , content: $('#select1')
+                        // "<div class=''>" +
+                        // // "<input type='text' class='layui-layer-input' autocomplete='off' name='name' id='name' placeholder='商品名'>" +
+                        // // "<br/>" +
+                        //
+                        // "<div class='layui-form-item'>"+
+                        // "<div class='layui-input-block'>"+
+                        // "<select name='name'  id='name'lay-filter='商品名' lay-verify='' lay-search>"+
+                        // "<option value='1'>轮播图1层</option>"+
+                        // "</select>"+
+                        // "</div>"+
+                        // "</div>"+
+                        //
+                        // "<br/>" +
+                        // "<input type='text' class='layui-layer-input' autocomplete='off' name='txt' placeholder='促销信息'>" +
+                        // "<br/>"+
+                        // "<select name='state'  lay-verify=''>"+
+                        // "<option value=''>请选择状态</option>"+
+                        // "<option value='1'>轮播图1层</option>"+
+                        // "<option value='2'>轮播图2层</option>"+
+                        // "<option value='3'>推荐栏</option>"+
+                        // "</select>"+
+                        //
+                        //
+                        // "</div>"
+                    , yes: function (index, layero) {//yes - 确定按钮回调方法
+                        var productId = $('#productId').val();
+
+                        var txt = $('#txt').val();
+                        //var state = $("#select_state").val();
+                       var state = $("select[name=select_state]").val();
+
+
+                        $.ajax({
+                            url:'/admin/recom/add',
+                            type:'post',
+                            data:{
+
+
+                                'txt':txt,
+                                'state1':state,
+                                'productId':productId
+
+                            },
+                            success:function (ret) {
+
+                                if(ret.status==200){
+
+                                    location.href = '/admin/recommend.html';
+                                }else{
+                                    layer.msg(ret.msg);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
+        table.on('tool(list)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm("真的要删除"+data.name+" 吗？", function(index){
+
+                    $.ajax({
+                        url:'/admin/recom/del',
+                        type:'post',
+                        data:{
+                            'id':data.id
+                        },
+                        success:function (ret) {
+                            layer.msg(ret.msg);
+                            if(ret.status==200){
+                                obj.del();
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+
+        });
+
+
+    })
+</script>
+</body>
+</html>

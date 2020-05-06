@@ -1,17 +1,20 @@
 package com.iflytek.enity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
 @TableName(value = "view_recommend")
-public class Recommend  {
-   private   Integer id;
-   private Long productId;
+public class RecommendView extends Recommend{
+
+
    private String  name;
    private Double price;
- private   String txt;
+
+    private   String sort;
     private   String pic;
- private Integer state;
+
  private String description;
 }

@@ -39,6 +39,7 @@
                         <dd><a href="/admin/product.html">商品管理</a></dd>
                         <dd><a href="/admin/order.html">订单管理</a></dd>
                         <dd><a href="/admin/information.html">资讯管理</a></dd>
+                        <dd><a href="/admin/recommend.html">推荐管理</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -51,7 +52,7 @@
         <div style="padding: 15px;">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    商品列表
+                    资讯列表
                 </div>
                 <div class="layui-card-body">
                     <form class="layui-form layui-col-space5">
@@ -93,7 +94,7 @@
 </script>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">新增商品</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增资讯</button>
     </div>
 </script>
 
@@ -251,15 +252,21 @@
                         "<br/>" +
                         "<input type='text' class='layui-layer-input' autocomplete='off' name='text' placeholder='内容'>" +
                         "<br/>"+
-                        "<input type='text' class='layui-layer-input' autocomplete='off' name='sort' placeholder='种类'>" +
-                        "<br/>"+
+                        "<select name='sort' lay-verify=''>"+
+                        "<option value=''>请选择种类</option>"+
+                        "<option value='公告'>公告</option>"+
+                        "<option value='饮食知识'>饮食知识</option>"+
+
+                        "</select>"+
+                        // "<input type='text' class='layui-layer-input' autocomplete='off' name='sort' placeholder='种类'>" +
+                        // "<br/>"+
 
                         "</div>"
                     , yes: function (index, layero) {//yes - 确定按钮回调方法
 
                         var title = $(layero).find("input[name='title']").val();
                         var text = $(layero).find("input[name='text']").val();
-
+                        var sort = $(layero).find("input[name='sort']").val();
 
                         $.ajax({
                             url:'/admin/info/add',
@@ -267,7 +274,8 @@
                             data:{
 
                                 'title':title,
-                                'text':text
+                                'text':text,
+                                'sort':sort
 
 
                             },
@@ -319,8 +327,7 @@
                         "<br/>"+
                         "<button type='button' class='layui-btn' id='test1'>选择图片</button>" +
                         "<br/>"+
-                        "<input type='text' class='layui-layer-photos' autocomplete='off' id='pic' placeholder='图片地址'>" +
-                        "<br/>" +
+
                         "<button type='button' class='layui-btn' id='load'>上传</button>" +
                         "<br/>"+
                         "</div>"

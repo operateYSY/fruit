@@ -50,3 +50,4 @@ public class WebAppConfig implements WebMvcConfigurer {
 
     }
 }
+//file:B:\\Gitmarket\\fruit\\market\\src\\main\\resources\\static\\res\\static\\img\\
